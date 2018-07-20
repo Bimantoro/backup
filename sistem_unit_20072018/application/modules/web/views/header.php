@@ -4,6 +4,7 @@
 		
 		<?php
 			$lang=$this->page_lib->lang();
+			$this->load->model('web/page_model');
 			//$lang='id';
 		?>
 		<?php
@@ -113,8 +114,8 @@
 				<div class="header-body">
 					<div class="header-top">
 						<div class="container">
-							<p>
-								<span class="ml-xs"><i class="fa fa-phone"></i> <?php echo $unit->telp?></span><span class="hidden-xs"> | <a href="#"><?php echo $unit->email?></a></span>
+							<p>	
+								<span class="ml-xs"><i class="fa fa-phone"></i> <?php echo $unit->telp?></span><span class="hidden-xs"> | <a href="mailto:<?php echo $unit->email; ?>"><?php echo $unit->email?></a></span>
 							</p>
 							<ul class="header-social-icons social-icons hidden-xs">
 								<li class="social-icons-facebook"><a href="<?php echo $social['facebook'] ?>" target="_blank" title="Facebook"><i class="fa fa-facebook"></i></a></li>

@@ -1,4 +1,5 @@
- <!DOCTYPE html>
+<?php $this->load->model('admin/page_model'); ?>
+<!DOCTYPE html>
 <html>
 	<head>
 		<?php

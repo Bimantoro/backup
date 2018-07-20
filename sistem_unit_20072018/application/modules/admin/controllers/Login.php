@@ -6,7 +6,7 @@ class Login extends CI_Controller {
 		$data['title']="Login";
 		$data['main_content'] = 'login/login_form';
 		$data['pesan'] = $this->session->flashdata('msg');
-		
+		$this->load->model('admin/page_model');
 		$this->load->view('login', $data);		
 	}
 

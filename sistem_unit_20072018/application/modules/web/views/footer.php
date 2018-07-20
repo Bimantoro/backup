@@ -1,6 +1,7 @@
 <?php
 	$lang=$this->page_lib->lang();
-	$lang='id';
+	$this->load->model('web/page_model');
+	//$lang='id';
 ?>
 		<?php
 			$d=explode('.',str_replace('http://','',base_url()));
@@ -45,7 +46,7 @@
 								<ul class="contact">
 									<li><p><i class="fa fa-map-marker"></i> <?php echo $unit->alamat?></p></li>
 									<li><p><i class="fa fa-phone"></i> <strong>Phone:</strong> <?php echo $unit->telp?></p></li>
-									<li><p><i class="fa fa-envelope"></i> <strong>Email:</strong> <a href="mailto:mail@example.com"> <?php echo $unit->email?></a></p></li>
+									<li><p><i class="fa fa-envelope"></i> <strong>Email:</strong> <a href="mailto:<?php echo $unit->email; ?>"> <?php echo $unit->email?></a></p></li>
 								</ul>
 							</div>
 						</div>

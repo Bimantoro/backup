@@ -1,6 +1,7 @@
 <?php
 	$lang=$this->page_lib->lang();
-	$lang='id';
+	$this->load->model('admin/page_model');
+	//$lang='id';
 ?>
 		<?php
 			$d=explode('.',str_replace('http://','',base_url()));
@@ -38,7 +39,8 @@
 								<ul class="contact">
 									<li><p><i class="fa fa-map-marker"></i> <?php echo (!empty($unit->alamat))?$unit->alamat : 'Yogyakarta';?></p></li>
 									<li><p><i class="fa fa-phone"></i> <strong>Phone:</strong> <?php echo (!empty($unit->telp))?$unit->telp : '+62-274-******';?></p></li>
-									<li><p><i class="fa fa-envelope"></i> <strong>Email:</strong> <a href="mailto:mail@example.com"> <?php echo (!empty($unit->email))?$unit->email : 'humas@uin-suka.ac.id';?></a></p></li>
+									<?php $mailto = explode(',', $unit->email); ?>
+									<li><p><i class="fa fa-envelope"></i> <strong>Email:</strong> <a href="mailto:"> <?php echo (!empty($unit->email))?$unit->email : 'humas@uin-suka.ac.id';?></a></p></li>
 								</ul>
 							</div>
 						</div>
