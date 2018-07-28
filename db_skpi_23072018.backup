@@ -1,0 +1,854 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 10.3 (Ubuntu 10.3-1)
+-- Dumped by pg_dump version 10.3
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: agama; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE public.agama AS ENUM (
+    'islam',
+    'katholik',
+    'kristen',
+    'hindu',
+    'budha',
+    'konghucu'
+);
+
+
+ALTER TYPE public.agama OWNER TO postgres;
+
+--
+-- Name: jenis_keg; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE public.jenis_keg AS ENUM (
+    'ORG',
+    'LAIN'
+);
+
+
+ALTER TYPE public.jenis_keg OWNER TO postgres;
+
+--
+-- Name: posisi; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE public.posisi AS ENUM (
+    '0',
+    '1',
+    '2'
+);
+
+
+ALTER TYPE public.posisi OWNER TO postgres;
+
+--
+-- Name: tipe_status; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE public.tipe_status AS ENUM (
+    '0',
+    '1'
+);
+
+
+ALTER TYPE public.tipe_status OWNER TO postgres;
+
+--
+-- Name: id_cp_sq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.id_cp_sq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.id_cp_sq OWNER TO postgres;
+
+--
+-- Name: id_kegiatan_sq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.id_kegiatan_sq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.id_kegiatan_sq OWNER TO postgres;
+
+--
+-- Name: id_label_detail_sq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.id_label_detail_sq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.id_label_detail_sq OWNER TO postgres;
+
+--
+-- Name: id_label_sq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.id_label_sq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.id_label_sq OWNER TO postgres;
+
+--
+-- Name: id_pengaturan_sq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.id_pengaturan_sq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.id_pengaturan_sq OWNER TO postgres;
+
+--
+-- Name: id_skpi_sq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.id_skpi_sq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.id_skpi_sq OWNER TO postgres;
+
+--
+-- Name: seri_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.seri_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.seri_seq OWNER TO postgres;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: tb_cp; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.tb_cp (
+    id_c integer DEFAULT nextval('public.id_cp_sq'::regclass) NOT NULL,
+    nim character varying(20) NOT NULL,
+    kd_cp text NOT NULL,
+    tgl_validasi date,
+    nip character varying(30),
+    keterangan text
+);
+
+
+ALTER TABLE public.tb_cp OWNER TO postgres;
+
+--
+-- Name: tb_kegiatan; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.tb_kegiatan (
+    id_k integer DEFAULT nextval('public.id_kegiatan_sq'::regclass) NOT NULL,
+    nim character varying(20),
+    kd_kegiatan text,
+    jenis text,
+    saran text,
+    status public.tipe_status DEFAULT '0'::public.tipe_status
+);
+
+
+ALTER TABLE public.tb_kegiatan OWNER TO postgres;
+
+--
+-- Name: tb_kode_ps; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.tb_kode_ps (
+    kode character varying(15) NOT NULL,
+    keterangan text,
+    status public.tipe_status
+);
+
+
+ALTER TABLE public.tb_kode_ps OWNER TO postgres;
+
+--
+-- Name: tb_label; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.tb_label (
+    id_l integer DEFAULT nextval('public.id_label_sq'::regclass) NOT NULL,
+    tgl_mulai date,
+    tgl_selesai date,
+    status public.tipe_status DEFAULT '0'::public.tipe_status,
+    keterangan text
+);
+
+
+ALTER TABLE public.tb_label OWNER TO postgres;
+
+--
+-- Name: tb_label_detail; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.tb_label_detail (
+    id_ld integer DEFAULT nextval('public.id_label_detail_sq'::regclass) NOT NULL,
+    id_l integer,
+    nama_idn text,
+    nama_en text,
+    nama_arb text,
+    posisi public.posisi,
+    urut integer,
+    ref integer
+);
+
+
+ALTER TABLE public.tb_label_detail OWNER TO postgres;
+
+--
+-- Name: tb_pengaturan; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.tb_pengaturan (
+    id_set integer DEFAULT nextval('public.id_pengaturan_sq'::regclass) NOT NULL,
+    kd_prodi character varying(10),
+    id_ld integer
+);
+
+
+ALTER TABLE public.tb_pengaturan OWNER TO postgres;
+
+--
+-- Name: tb_penulisan_sertifikasi; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.tb_penulisan_sertifikasi (
+    id_ps integer DEFAULT nextval('public.id_pengaturan_sq'::regclass) NOT NULL,
+    kode character varying(15),
+    nama_idn text,
+    nama_en text,
+    unit_idn text,
+    unit_en text,
+    urutan integer,
+    status public.tipe_status
+);
+
+
+ALTER TABLE public.tb_penulisan_sertifikasi OWNER TO postgres;
+
+--
+-- Name: tb_skpi; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.tb_skpi (
+    id_s integer DEFAULT nextval('public.id_skpi_sq'::regclass) NOT NULL,
+    nim character varying(20),
+    no_skpi text,
+    id_l integer,
+    status public.tipe_status,
+    tgl_setuju date,
+    nip character varying(30),
+    keterangan text,
+    unused_label text,
+    tgl_daftar date,
+    kd_prodi character varying(30)
+);
+
+
+ALTER TABLE public.tb_skpi OWNER TO postgres;
+
+--
+-- Name: tb_unused_label; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.tb_unused_label (
+    kd_prodi character varying(20),
+    id_ld integer
+);
+
+
+ALTER TABLE public.tb_unused_label OWNER TO postgres;
+
+--
+-- Data for Name: tb_cp; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.tb_cp (id_c, nim, kd_cp, tgl_validasi, nip, keterangan) FROM stdin;
+112	14340046	10000046	2018-07-18	197901052005012003	\N
+113	14340046	10000047	2018-07-18	197901052005012003	\N
+114	14340046	10000048	2018-07-18	197901052005012003	\N
+115	14340046	10000049	2018-07-18	197901052005012003	\N
+116	14340046	10000050	2018-07-18	197901052005012003	\N
+117	14340046	10000051	2018-07-18	197901052005012003	\N
+118	14340046	10000052	2018-07-18	197901052005012003	\N
+119	14340046	10000053	2018-07-18	197901052005012003	\N
+120	14340046	10000054	2018-07-18	197901052005012003	\N
+121	14340046	10000055	2018-07-18	197901052005012003	\N
+122	14340046	10000056	2018-07-18	197901052005012003	\N
+123	14340046	10000058	2018-07-18	197901052005012003	\N
+124	14340046	10000059	2018-07-18	197901052005012003	\N
+125	14340046	10000060	2018-07-18	197901052005012003	\N
+126	14340046	10000061	2018-07-18	197901052005012003	\N
+127	14340046	10000062	2018-07-18	197901052005012003	\N
+128	14340046	10000063	2018-07-18	197901052005012003	\N
+129	14340046	10000064	2018-07-18	197901052005012003	\N
+130	14340046	10000065	2018-07-18	197901052005012003	\N
+131	14340046	10000066	2018-07-18	197901052005012003	\N
+132	14340046	10000067	2018-07-18	197901052005012003	\N
+133	14340046	10000068	2018-07-18	197901052005012003	\N
+134	14340046	10000069	2018-07-18	197901052005012003	\N
+135	14340046	10000070	2018-07-18	197901052005012003	\N
+136	14340046	10000071	2018-07-18	197901052005012003	\N
+137	14340046	10000072	2018-07-18	197901052005012003	\N
+138	14340046	10000073	2018-07-18	197901052005012003	\N
+139	14340046	10000074	2018-07-18	197901052005012003	\N
+140	14340046	10000075	2018-07-18	197901052005012003	\N
+141	14340046	10000076	2018-07-18	197901052005012003	\N
+142	14340046	10000077	2018-07-18	197901052005012003	\N
+143	13340137	10000046	2018-07-18	197901052005012003	\N
+144	13340137	10000047	2018-07-18	197901052005012003	\N
+145	13340137	10000048	2018-07-18	197901052005012003	\N
+146	13340137	10000049	2018-07-18	197901052005012003	\N
+147	13340137	10000050	2018-07-18	197901052005012003	\N
+148	13340137	10000051	2018-07-18	197901052005012003	\N
+149	13340137	10000052	2018-07-18	197901052005012003	\N
+150	13340137	10000053	2018-07-18	197901052005012003	\N
+151	13340137	10000054	2018-07-18	197901052005012003	\N
+152	13340137	10000055	2018-07-18	197901052005012003	\N
+153	13340137	10000056	2018-07-18	197901052005012003	\N
+154	13340137	10000058	2018-07-18	197901052005012003	\N
+155	13340137	10000059	2018-07-18	197901052005012003	\N
+156	13340137	10000060	2018-07-18	197901052005012003	\N
+157	13340137	10000061	2018-07-18	197901052005012003	\N
+158	13340137	10000062	2018-07-18	197901052005012003	\N
+159	13340137	10000063	2018-07-18	197901052005012003	\N
+160	13340137	10000064	2018-07-18	197901052005012003	\N
+161	13340137	10000065	2018-07-18	197901052005012003	\N
+162	13340137	10000066	2018-07-18	197901052005012003	\N
+163	13340137	10000067	2018-07-18	197901052005012003	\N
+164	13340137	10000068	2018-07-18	197901052005012003	\N
+165	13340137	10000069	2018-07-18	197901052005012003	\N
+166	13340137	10000070	2018-07-18	197901052005012003	\N
+167	13340137	10000071	2018-07-18	197901052005012003	\N
+168	13340137	10000072	2018-07-18	197901052005012003	\N
+169	13340137	10000073	2018-07-18	197901052005012003	\N
+170	13340137	10000074	2018-07-18	197901052005012003	\N
+171	13340137	10000075	2018-07-18	197901052005012003	\N
+172	13340137	10000076	2018-07-18	197901052005012003	\N
+173	13340137	10000077	2018-07-18	197901052005012003	\N
+174	14140040	10000220	2018-07-20	197901162005012001	\N
+175	14140040	10000221	2018-07-20	197901162005012001	\N
+176	14140040	10000222	2018-07-20	197901162005012001	\N
+177	14140040	10000223	2018-07-20	197901162005012001	\N
+178	14140040	10000224	2018-07-20	197901162005012001	\N
+179	14140040	10000225	2018-07-20	197901162005012001	\N
+180	14140040	10000226	2018-07-20	197901162005012001	\N
+181	14140040	10000227	2018-07-20	197901162005012001	\N
+182	14140040	10000228	2018-07-20	197901162005012001	\N
+183	14140040	10000229	2018-07-20	197901162005012001	\N
+184	14140040	10000230	2018-07-20	197901162005012001	\N
+185	14140040	10000231	2018-07-20	197901162005012001	\N
+186	14140040	10000232	2018-07-20	197901162005012001	\N
+189	14140040	10000235	2018-07-20	197901162005012001	\N
+191	14140040	10000237	2018-07-20	197901162005012001	\N
+194	14140040	10000240	2018-07-20	197901162005012001	\N
+196	14140040	10000242	2018-07-20	197901162005012001	\N
+201	14140040	10000247	2018-07-20	197901162005012001	\N
+211	14140040	10000257	2018-07-20	197901162005012001	\N
+187	14140040	10000233	2018-07-20	197901162005012001	\N
+192	14140040	10000238	2018-07-20	197901162005012001	\N
+202	14140040	10000248	2018-07-20	197901162005012001	\N
+188	14140040	10000234	2018-07-20	197901162005012001	\N
+193	14140040	10000239	2018-07-20	197901162005012001	\N
+190	14140040	10000236	2018-07-20	197901162005012001	\N
+195	14140040	10000241	2018-07-20	197901162005012001	\N
+197	14140040	10000243	2018-07-20	197901162005012001	\N
+198	14140040	10000244	2018-07-20	197901162005012001	\N
+199	14140040	10000245	2018-07-20	197901162005012001	\N
+200	14140040	10000246	2018-07-20	197901162005012001	\N
+203	14140040	10000249	2018-07-20	197901162005012001	\N
+204	14140040	10000250	2018-07-20	197901162005012001	\N
+205	14140040	10000251	2018-07-20	197901162005012001	\N
+206	14140040	10000252	2018-07-20	197901162005012001	\N
+207	14140040	10000253	2018-07-20	197901162005012001	\N
+208	14140040	10000254	2018-07-20	197901162005012001	\N
+209	14140040	10000255	2018-07-20	197901162005012001	\N
+210	14140040	10000256	2018-07-20	197901162005012001	\N
+212	13651060	10001322	2018-07-23	PKSI100	\N
+213	13651060	10001323	2018-07-23	PKSI100	\N
+214	13651060	10001324	2018-07-23	PKSI100	\N
+215	13651060	10001325	2018-07-23	PKSI100	\N
+216	13651060	10001326	2018-07-23	PKSI100	\N
+217	13651060	10001327	2018-07-23	PKSI100	\N
+218	13651060	10001328	2018-07-23	PKSI100	\N
+219	13651060	10001329	2018-07-23	PKSI100	\N
+220	13651060	10001330	2018-07-23	PKSI100	\N
+221	13651060	10001331	2018-07-23	PKSI100	\N
+222	13651060	10001332	2018-07-23	PKSI100	\N
+223	13651060	10001333	2018-07-23	PKSI100	\N
+224	13651060	10001334	2018-07-23	PKSI100	\N
+225	13651060	10001336	2018-07-23	PKSI100	\N
+226	13651060	10001337	2018-07-23	PKSI100	\N
+227	13651060	10001338	2018-07-23	PKSI100	\N
+228	13651060	10001339	2018-07-23	PKSI100	\N
+229	13651060	10001340	2018-07-23	PKSI100	\N
+230	13651060	10001341	2018-07-23	PKSI100	\N
+231	13651060	10001342	2018-07-23	PKSI100	\N
+232	13651060	10001343	2018-07-23	PKSI100	\N
+233	13651060	10001344	2018-07-23	PKSI100	\N
+234	13651060	10001345	2018-07-23	PKSI100	\N
+235	13651060	10001346	2018-07-23	PKSI100	\N
+236	13651060	10001347	2018-07-23	PKSI100	\N
+237	13651060	10001348	2018-07-23	PKSI100	\N
+238	13651060	10001349	2018-07-23	PKSI100	\N
+239	13651060	10001350	2018-07-23	PKSI100	\N
+240	13651060	10001351	2018-07-23	PKSI100	\N
+241	13651060	10001352	2018-07-23	PKSI100	\N
+242	13651060	10001353	2018-07-23	PKSI100	\N
+243	13651060	10001354	2018-07-23	PKSI100	\N
+244	13651060	10001355	2018-07-23	PKSI100	\N
+245	13651060	10001356	2018-07-23	PKSI100	\N
+246	13651060	10001357	2018-07-23	PKSI100	\N
+247	13651060	10001358	2018-07-23	PKSI100	\N
+248	13651060	10001359	2018-07-23	PKSI100	\N
+\.
+
+
+--
+-- Data for Name: tb_kegiatan; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.tb_kegiatan (id_k, nim, kd_kegiatan, jenis, saran, status) FROM stdin;
+9	1620311009	UIN1620311009TOEC	SERTIFIKASI	Belum dilakukan verifikasi penulisan !	\N
+10	1620311009	16203110091002519682	KARAKTER	Belum dilakukan verifikasi penulisan !	\N
+11	1620310113	UIN1620310113IKLA	SERTIFIKASI	Belum dilakukan verifikasi penulisan !	\N
+12	1620310113	UIN1620310113TOEC	SERTIFIKASI	Belum dilakukan verifikasi penulisan !	\N
+13	13340137	UIN13340137ICT	SERTIFIKASI	Belum dilakukan verifikasi penulisan !	\N
+14	13340137	UIN13340137IKLA	SERTIFIKASI	Belum dilakukan verifikasi penulisan !	\N
+15	13340137	UIN13340137TOEC	SERTIFIKASI	Belum dilakukan verifikasi penulisan !	\N
+16	1520311071	15203110711002520481	ORGANISASI	Belum dilakukan verifikasi penulisan !	\N
+17	1520311071	15203110711002465868	ORGANISASI	Belum dilakukan verifikasi penulisan !	\N
+18	1520311071	UIN1520311071IKLA	SERTIFIKASI	Belum dilakukan verifikasi penulisan !	\N
+19	1520311071	UIN1520311071TOEC	SERTIFIKASI	Belum dilakukan verifikasi penulisan !	\N
+20	1620310040	16203100401002521126	SERTIFIKASI	Belum dilakukan verifikasi penulisan !	\N
+21	1620310040	UIN1620310040IKLA	SERTIFIKASI	Belum dilakukan verifikasi penulisan !	\N
+22	1620310040	UIN1620310040TOEC	SERTIFIKASI	Belum dilakukan verifikasi penulisan !	\N
+23	1620310040	16203100401002521116	MAGANG	Belum dilakukan verifikasi penulisan !	\N
+24	1620310040	16203100401002521117	KARAKTER	Belum dilakukan verifikasi penulisan !	\N
+25	1620310040	16203100401002521140	KARAKTER	Belum dilakukan verifikasi penulisan !	\N
+29	13651060	UIN13651060ICT	SERTIFIKASI	Belum dilakukan verifikasi penulisan !	\N
+30	13651060	UIN13651060IKLA	SERTIFIKASI	Belum dilakukan verifikasi penulisan !	\N
+31	13651060	UIN13651060TOEC	SERTIFIKASI	Belum dilakukan verifikasi penulisan !	\N
+34	13651060	136510601002289039	PRESTASI	Penulisan Data Sudah Benar	1
+35	13651060	136510601002289038	ORGANISASI	Penulisan Data Sudah Benar	1
+36	13651060	136510601002289041	SERTIFIKASI	Penulisan Data Sudah Benar	1
+37	13651060	136510601002287500	MAGANG	Penulisan Data Sudah Benar	1
+38	13651060	136510601002289042	KARAKTER	Penulisan Data Sudah Benar	1
+\.
+
+
+--
+-- Data for Name: tb_kode_ps; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.tb_kode_ps (kode, keterangan, status) FROM stdin;
+ICT	Sertifikasi Teknologi Informasi dan Komunikasi	1
+IKLA	Sertifikasi Ikhtibar Kafaah Al-Lughah Al Arabiyah	1
+TOEC	Sertifikasi Test Of English Competence	1
+\.
+
+
+--
+-- Data for Name: tb_label; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.tb_label (id_l, tgl_mulai, tgl_selesai, status, keterangan) FROM stdin;
+1	2017-07-01	2025-07-31	1	label skpi 1
+\.
+
+
+--
+-- Data for Name: tb_label_detail; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.tb_label_detail (id_ld, id_l, nama_idn, nama_en, nama_arb, posisi, urut, ref) FROM stdin;
+1	1	Surat Keterangan Pendamping Ijazah	Diploma Supplement		0	1	\N
+4	1	Informasi Tentang Identitas Diri Pemegang SKPI	Information Identifying The Holder of Diploma Supplement		1	1	\N
+5	1	Informasi Tentang Identitas Penyelenggara Program	Information Identifying the Awarding Institution		1	2	\N
+6	1	Informasi Tentang Kualifikasi dan Hasil Yang Dicapai	Information Identifying the Qualification and Outcomes Obtained		1	3	\N
+7	1	Aktivitas, Prestasi dan Penghargaan	Activities, Achievements and Awards		1	4	\N
+8	1	Informasi Tentang Sistem Pendidikan Tinggi di Indonesia	Information on the Indonesian Higher Education System and the Indonesian National Qualifications Framework		1	5	\N
+9	1	Kerangka Kualifikasi Nasional Indonesia (KKNI)	Indonesian Qualification Framework		1	6	\N
+10	1	Nama Lengkap	Full Name		2	1	4
+11	1	Tempat dan Tanggal Lahir	Date and Place of Birth		2	2	4
+12	1	Nomor Induk Mahasiswa	Student Identification Number		2	3	4
+13	1	Tahun Masuk	Year of Admission		2	4	4
+14	1	Tahun Lulus	Year of Completion		2	5	4
+15	1	Nomor Ijazah	Nomor Ijazah		2	6	4
+16	1	Gelar	Name of Qualification		2	7	4
+17	1	SK Pendirian Perguruan Tinggi	Awarding Institution’s License		2	1	5
+18	1	Nama Perguruan Tinggi	Awarding Institution		2	2	5
+19	1	Fakultas 	Faculty		2	3	5
+20	1	Program Studi	Major		2	4	5
+21	1	Jenis & Jenjang Pendidikan	Type & Level of Education		2	5	5
+22	1	Jenjang Kualifikasi sesuai KKNI	Level of Qualification in the National Qualification Framework		2	6	5
+23	1	Persyaratan Penerimaan	Entry Requirements		2	7	5
+24	1	Bahasa Pengantar Kuliah	Language of Instruction		2	8	5
+25	1	Sistem Penilaian	Grading System		2	9	5
+26	1	Lama Studi Reguler	Regular Length of Study		2	10	5
+27	1	Jenis dan jenjang pendidikan lanjutan	Access to Further Study		2	11	5
+28	1	Status profesi (bila ada)	Professional Status (if Applicable)		2	12	5
+34	1	Prestasi dan Penghargaan	Achievements and Awards		2	1	7
+35	1	Keikutsertaan dalam Organisasi	Organizational Experiences		2	2	7
+36	1	Sertifikat Keahlian	Certificate of Competencies		2	3	7
+37	1	Kerja Praktek/Magang	Apprenticeships		2	4	7
+38	1	Pendidikan Karakter 	Soft Skill Trainings		2	5	7
+39	1	Sistem Pendidikan Tinggi di Indonesia	Higher Education System in Indonesia		2	1	8
+3	1	Alamat	Contact Details		0	2	\N
+29	1	Capaian Pembelajaran	Learning Outcomes		2	5	6
+30	1	Sikap	Attitude		2	1	6
+31	1	Pengetahuan	Knowledge 		2	2	6
+32	1	Keterampilan Umum	General Skills		2	3	6
+33	1	Keterampilan Khusus	Special Skills		2	4	6
+40	1	Surat Keterangan Pendamping Ijazah (SKPI) ini mengacu pada Kerangka Kualifikasi Nasional Indonesia (KKNI) dan Konvensi UNESCO tentang pengakuan studi, ijazah dan gelar perguruan tinggi. Tujuan dari SKPI ini adalah menjadi dokumen yang menyatakan kemampuan kerja, penguasaan pengetahuan, dan sikap/moral pemegangnya.	This Diploma Supplement refers to the Indonesian Qualification Framework and UNESCO Convention on the Recognition of Studies, Diplomas and Degrees in Higher Education. The purpose of the supplement is to provide a description of the nature, level, context and status of the studies that were pursued and successfully completed by the individual named on the original qualification to which this supplement is appended.		2	1	1
+\.
+
+
+--
+-- Data for Name: tb_pengaturan; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.tb_pengaturan (id_set, kd_prodi, id_ld) FROM stdin;
+\.
+
+
+--
+-- Data for Name: tb_penulisan_sertifikasi; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.tb_penulisan_sertifikasi (id_ps, kode, nama_idn, nama_en, unit_idn, unit_en, urutan, status) FROM stdin;
+1	ICT	Teknologi Informasi dan Komunikasi	Information Communication Technology	Islam Negeri Sunan Kalijaga Yogyakarta	State Islamic University Sunan Kalijaga Yogyakarta	1	1
+2	IKLA	Ikhtibar Kafaah Al-Lughah Al Arabiyah (IKLA) 	Ikhtibar Kafaah Al-Lughah Al Arabiyah (IKLA) 	Islam Negeri Sunan Kalijaga Yogyakarta	State Islamic University Sunan Kalijaga Yogyakarta	2	1
+3	TOEC	Test Of English Competence (TOEC)	Test Of English Competence (TOEC)	Islam Negeri Sunan Kalijaga Yogyakarta	State Islamic University Sunan Kalijaga Yogyakarta	3	1
+\.
+
+
+--
+-- Data for Name: tb_skpi; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.tb_skpi (id_s, nim, no_skpi, id_l, status, tgl_setuju, nip, keterangan, unused_label, tgl_daftar, kd_prodi) FROM stdin;
+59	1620310008	SKP0000056	1	0	\N		\N	[]	2018-07-20	23605
+60	14820069	SKP0000057	1	0	\N		\N	[]	2018-07-20	82
+61	14820107	SKP0000058	1	0	\N		\N	[]	2018-07-20	82
+62	14820129	SKP0000059	1	0	\N		\N	[]	2018-07-20	82
+63	14820122	SKP0000060	1	0	\N		\N	[]	2018-07-20	82
+64	14820050	SKP0000061	1	0	\N		\N	[]	2018-07-20	82
+1	14730081	SKP00000	1	0	\N		\N	[]	2018-07-13	22406
+65	14820068	SKP0000062	1	0	\N		\N	[]	2018-07-20	82
+2	14730058	SKP00000	1	0	\N		\N	[]	2018-07-13	22406
+3	14730089	SKP00000	1	0	\N		\N	[]	2018-07-13	22406
+4	14730086	SKP000001	1	0	\N		\N	[]	2018-07-13	22406
+5	14480087	SKP000002	1	0	\N		\N	[]	2018-07-13	22122
+6	14730090	SKP000003	1	0	\N		\N	[]	2018-07-13	22406
+8	14820049	SKP000005	1	0	\N		\N	[]	2018-07-13	82
+9	14730091	SKP000006	1	0	\N		\N	[]	2018-07-13	22406
+10	14730084	SKP000007	1	0	\N		\N	[]	2018-07-13	22406
+11	13230003	SKP000008	1	0	\N		\N	[]	2018-07-13	22411
+12	11120092	SKP000009	1	0	\N		\N	[]	2018-07-14	22513
+13	13820109	SKP0000010	1	0	\N		\N	[]	2018-07-14	82
+66	14820111	SKP0000063	1	0	\N		\N	[]	2018-07-20	82
+67	14820057	SKP0000064	1	0	\N		\N	[]	2018-07-20	82
+14	1620311009	SKP0000011	1	1	2018-07-16	197506152000031001	\N	[]	2018-07-16	23605
+15	11120088	SKP0000012	1	0	\N		\N	[]	2018-07-16	22513
+17	12391045	SKP0000014	1	0	\N		\N	[]	2018-07-16	22221
+16	1620310113	SKP0000013	1	1	2018-07-16	197506152000031001	\N	[]	2018-07-16	23605
+18	11710129	SKP0000015	1	0	\N		\N	[]	2018-07-16	22620
+19	11710146	SKP0000016	1	0	\N		\N	[]	2018-07-16	22620
+21	11530012	SKP0000018	1	0	\N		\N	[]	2018-07-17	22312
+23	14820174	SKP0000020	1	0	\N		\N	[]	2018-07-17	82
+24	14820042	SKP0000021	1	0	\N		\N	[]	2018-07-17	82
+25	12120049	SKP0000022	1	0	\N		\N	[]	2018-07-17	22513
+26	11710032	SKP0000023	1	0	\N		\N	[]	2018-07-17	22620
+27	14410002	SKP0000024	1	0	\N		\N	[]	2018-07-17	22124
+30	13410062	SKP0000027	1	0	\N		\N	[]	2018-07-17	22124
+68	14820160	SKP0000065	1	0	\N		\N	[]	2018-07-20	82
+69	14820073	SKP0000066	1	0	\N		\N	[]	2018-07-20	82
+70	14830034	SKP0000067	1	0	\N		\N	[]	2018-07-20	83
+71	14820079	SKP0000068	1	0	\N		\N	[]	2018-07-20	82
+31	14730064	SKP0000028	1	0	\N		\N	[]	2018-07-18	22406
+32	14480132	SKP0000029	1	0	\N		\N	[]	2018-07-18	22122
+33	13820200	SKP0000030	1	0	\N		\N	[]	2018-07-18	82
+7	13340137	SKP000004	1	1	2018-07-18	197901052005012003	\N	[]	2018-07-13	40
+34	14140040	SKP0000031	1	0	\N		\N	[]	2018-07-18	22510
+22	1520311071	SKP0000019	1	1	2018-07-18	197506152000031001	\N	[]	2018-07-17	23605
+28	1620310040	SKP0000025	1	1	2018-07-18	197506152000031001	\N	[]	2018-07-17	23605
+20	1620311055	SKP0000017	1	1	2018-07-18	197506152000031001	\N	[]	2018-07-16	23605
+35	12240071	SKP0000032	1	0	\N		\N	[]	2018-07-18	22408
+36	1620310128	SKP0000033	1	0	\N		\N	[]	2018-07-18	23605
+37	14820170	SKP0000034	1	0	\N		\N	[]	2018-07-18	82
+38	13531173	SKP0000035	1	0	\N		\N	[]	2018-07-18	22312A
+72	14820171	SKP0000069	1	0	\N		\N	[]	2018-07-20	82
+73	14820070	SKP0000070	1	0	\N		\N	[]	2018-07-20	82
+39	14830008	SKP0000036	1	0	\N		\N	[]	2018-07-19	83
+40	13531168	SKP0000037	1	0	\N		\N	[]	2018-07-19	22312A
+41	14730032	SKP0000038	1	0	\N		\N	[]	2018-07-19	22406
+42	14820062	SKP0000039	1	0	\N		\N	[]	2018-07-19	82
+43	14820137	SKP0000040	1	0	\N		\N	[]	2018-07-19	82
+44	14820038	SKP0000041	1	0	\N		\N	[]	2018-07-19	82
+45	14820007	SKP0000042	1	0	\N		\N	[]	2018-07-20	82
+46	14820077	SKP0000043	1	0	\N		\N	[]	2018-07-20	82
+47	14820166	SKP0000044	1	0	\N		\N	[]	2018-07-20	82
+48	14820123	SKP0000045	1	0	\N		\N	[]	2018-07-20	82
+49	14820030	SKP0000046	1	0	\N		\N	[]	2018-07-20	82
+50	14820005	SKP0000047	1	0	\N		\N	[]	2018-07-20	82
+51	14820033	SKP0000048	1	0	\N		\N	[]	2018-07-20	82
+52	14820029	SKP0000049	1	0	\N		\N	[]	2018-07-20	82
+53	14820155	SKP0000050	1	0	\N		\N	[]	2018-07-20	82
+54	14820078	SKP0000051	1	0	\N		\N	[]	2018-07-20	82
+55	14820061	SKP0000052	1	0	\N		\N	[]	2018-07-20	82
+56	14120082	SKP0000053	1	0	\N		\N	[]	2018-07-20	22513
+57	14820034	SKP0000054	1	0	\N		\N	[]	2018-07-20	82
+58	14820097	SKP0000055	1	0	\N		\N	[]	2018-07-20	82
+74	1620310110	SKP0000071	1	0	\N		\N	[]	2018-07-20	23605
+75	14820175	SKP0000072	1	0	\N		\N	[]	2018-07-20	82
+76	14210015	SKP0000073	1	0	\N		\N	[]	2018-07-20	22407
+77	13390038	SKP0000074	1	0	\N		\N	[]	2018-07-20	22221
+78	14830022	SKP0000075	1	0	\N		\N	[]	2018-07-21	83
+79	11530078	SKP0000076	1	0	\N		\N	[]	2018-07-21	22312
+80	14110080	SKP0000077	1	0	\N		\N	[]	2018-07-21	22508
+81	14820053	SKP0000078	1	0	\N		\N	[]	2018-07-21	82
+82	14830002	SKP0000079	1	0	\N		\N	[]	2018-07-21	83
+83	11710075	SKP0000080	1	0	\N		\N	[]	2018-07-22	22620
+84	14220061	SKP0000081	1	0	\N		\N	[]	2018-07-22	22403
+85	13150074	SKP0000082	1	0	\N		\N	[]	2018-07-22	15
+86	14140019	SKP0000083	1	0	\N		\N	[]	2018-07-22	22510
+87	14140051	SKP0000084	1	0	\N		\N	[]	2018-07-22	22510
+88	14140007	SKP0000085	1	0	\N		\N	[]	2018-07-22	22510
+29	14340046	SKP0000026	1	1	2018-07-18	197901052005012003	BATAL_DAFTAR#Mahasiswa akan menginputkan dat aprestasinya	[]	2018-07-17	40
+0	13651060	SKP000000	1	0	2018-07-23	PKSI100	BATAL_DAFTAR#mahasiswa akan melakukan pengisian data prestasi	[]	2018-07-23	22607
+\.
+
+
+--
+-- Data for Name: tb_unused_label; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.tb_unused_label (kd_prodi, id_ld) FROM stdin;
+\.
+
+
+--
+-- Name: id_cp_sq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.id_cp_sq', 248, true);
+
+
+--
+-- Name: id_kegiatan_sq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.id_kegiatan_sq', 38, true);
+
+
+--
+-- Name: id_label_detail_sq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.id_label_detail_sq', 40, true);
+
+
+--
+-- Name: id_label_sq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.id_label_sq', 1, true);
+
+
+--
+-- Name: id_pengaturan_sq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.id_pengaturan_sq', 3, true);
+
+
+--
+-- Name: id_skpi_sq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.id_skpi_sq', 88, true);
+
+
+--
+-- Name: seri_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.seri_seq', 85, true);
+
+
+--
+-- Name: tb_pengaturan pk_id_pengaturan; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tb_pengaturan
+    ADD CONSTRAINT pk_id_pengaturan PRIMARY KEY (id_set);
+
+
+--
+-- Name: tb_label_detail pk_labeld_idlabeld; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tb_label_detail
+    ADD CONSTRAINT pk_labeld_idlabeld PRIMARY KEY (id_ld);
+
+
+--
+-- Name: tb_penulisan_sertifikasi pk_penulisan_prestasi; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tb_penulisan_sertifikasi
+    ADD CONSTRAINT pk_penulisan_prestasi PRIMARY KEY (id_ps);
+
+
+--
+-- Name: tb_skpi pk_skpi_idskpi; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tb_skpi
+    ADD CONSTRAINT pk_skpi_idskpi PRIMARY KEY (id_s);
+
+
+--
+-- Name: tb_cp tb_cp_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tb_cp
+    ADD CONSTRAINT tb_cp_pkey PRIMARY KEY (nim, kd_cp);
+
+
+--
+-- Name: tb_kegiatan tb_kegiatan_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tb_kegiatan
+    ADD CONSTRAINT tb_kegiatan_pkey PRIMARY KEY (id_k);
+
+
+--
+-- Name: tb_kode_ps tb_kode_ps_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tb_kode_ps
+    ADD CONSTRAINT tb_kode_ps_pk PRIMARY KEY (kode);
+
+
+--
+-- Name: tb_label tb_label_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tb_label
+    ADD CONSTRAINT tb_label_pkey PRIMARY KEY (id_l);
+
+
+--
+-- Name: tb_pengaturan fk_idld_pengaturan; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tb_pengaturan
+    ADD CONSTRAINT fk_idld_pengaturan FOREIGN KEY (id_ld) REFERENCES public.tb_label_detail(id_ld);
+
+
+--
+-- Name: tb_penulisan_sertifikasi fk_penulisan_kode; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tb_penulisan_sertifikasi
+    ADD CONSTRAINT fk_penulisan_kode FOREIGN KEY (kode) REFERENCES public.tb_kode_ps(kode);
+
+
+--
+-- Name: tb_label_detail tb_label_detail_id_l_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tb_label_detail
+    ADD CONSTRAINT tb_label_detail_id_l_fkey FOREIGN KEY (id_l) REFERENCES public.tb_label(id_l);
+
+
+--
+-- Name: tb_label_detail tb_label_detail_ref_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tb_label_detail
+    ADD CONSTRAINT tb_label_detail_ref_fkey FOREIGN KEY (ref) REFERENCES public.tb_label_detail(id_ld);
+
+
+--
+-- Name: tb_skpi tb_skpi_id_l_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tb_skpi
+    ADD CONSTRAINT tb_skpi_id_l_fkey FOREIGN KEY (id_l) REFERENCES public.tb_label(id_l);
+
+
+--
+-- PostgreSQL database dump complete
+--
+
